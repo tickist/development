@@ -1,0 +1,75 @@
+version: '2'
+
+services:
+  # Redis
+  redis:
+    image: redis:2.8.19
+    hostname: redis
+
+  # RabbitMQ
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3.6.0
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "5672:5672"  # we forward this port because it's useful for debugging
+      - "15672:15672"  # here, we can access rabbitmq management plugin
+
+  # Django web server
+  api:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    hostname: api
+    command: /srv/tickist/backend/run_web.sh
+    privileged: true
+    environment:
+      - DEBUG=True
+      - PRODUCTION=False
+      - DATABASE=SQLITE
+      - CELERY_ALWAYS_EAGER=True
+      - DOMAIN=http://tickist.com/
+      - DEFAULT_FROM_EMAIL=info@tickist.com
+      - STATIC_ROOT=/srv/tickist/backend/site_media
+      - MEDIA_ROOT=/srv/tickist/backend/media
+    volumes:
+      - ./backend:/srv/tickist/backend  # mount current directory inside container
+    ports:
+      - "8000:8000"
+    # set up links so that web knows about db, rabbit and redis
+
+  # Celery worker
+  worker:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: /srv/tickist/backend/run_celery.sh
+    hostname: worker
+    volumes:
+      - ./backend:/srv/tickist/backend
+    links:
+      - rabbit
+      - redis
+    privileged: true
+    depends_on:
+      - rabbit
+
+  # frontend app
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    command: npm run start
+    hostname: frontend
+    volumes:
+      - ./frontend:/srv/tickist/frontend
+    ports:
+      - "4200:4200"
+      - "9876:9876"
+    environment:
+      - DISPLAY=:1
+    privileged: true # for Chrome to run on Docker
+    depends_on:
+      - api
