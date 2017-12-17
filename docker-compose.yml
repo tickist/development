@@ -25,6 +25,7 @@ services:
     hostname: api
     command: /srv/tickist/backend/run_web.sh
     privileged: true
+    restart: always
     environment:
       - DEBUG=True
       - PRODUCTION=False
@@ -64,7 +65,8 @@ services:
     command: npm run start
     hostname: frontend
     volumes:
-      - ./frontend:/srv/tickist/frontend
+      - ./frontend/src:/srv/tickist/frontend/src
+      - ./frontend/e2e:/srv/tickist/frontend/e2e
     ports:
       - "4200:4200"
       - "9876:9876"

@@ -78,7 +78,8 @@ db.sqlite3
 *node_modules
 
 site.retry
-code/media
-code/static
+
 
 .DS_Store
+backend
+frontend
