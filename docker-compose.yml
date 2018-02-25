@@ -42,11 +42,27 @@ services:
     # set up links so that web knows about db, rabbit and redis
 
   # Celery worker
-  worker:
+  celery:
     build:
       context: backend
       dockerfile: Dockerfile
     command: /srv/tickist/backend/run_celery.sh
+    hostname: worker
+    volumes:
+      - ./backend:/srv/tickist/backend
+    links:
+      - rabbit
+      - redis
+    privileged: true
+    depends_on:
+      - rabbit
+
+  # Celery worker
+  celery_beat:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: /srv/tickist/backend/run_celery_beat.sh
     hostname: worker
     volumes:
       - ./backend:/srv/tickist/backend
