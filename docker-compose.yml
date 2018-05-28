@@ -83,6 +83,7 @@ services:
     volumes:
       - ./frontend/src:/srv/tickist/frontend/src
       - ./frontend/e2e:/srv/tickist/frontend/e2e
+      - ./frontend/coverage:/srv/tickist/frontend/coverage
     ports:
       - "4200:4200"
       - "9876:9876"
