@@ -54,6 +54,15 @@ services:
         - rabbit
         - redis
         privileged: true
+        environment:
+        - DEBUG=True
+        - PRODUCTION=False
+        - DATABASE=SQLITE
+        - CELERY_ALWAYS_EAGER=True
+        - DOMAIN=http://tickist.com/
+        - DEFAULT_FROM_EMAIL=info@tickist.com
+        - STATIC_ROOT=/srv/tickist/backend/site_media
+        - MEDIA_ROOT=/srv/tickist/backend/media
         depends_on:
         - rabbit
 
@@ -70,6 +79,15 @@ services:
         - rabbit
         - redis
         privileged: true
+        environment:
+        - DEBUG=True
+        - PRODUCTION=False
+        - DATABASE=SQLITE
+        - CELERY_ALWAYS_EAGER=True
+        - DOMAIN=http://tickist.com/
+        - DEFAULT_FROM_EMAIL=info@tickist.com
+        - STATIC_ROOT=/srv/tickist/backend/site_media
+        - MEDIA_ROOT=/srv/tickist/backend/media
         depends_on:
         - rabbit
 

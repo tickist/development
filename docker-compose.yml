@@ -81,7 +81,6 @@ services:
     command: npm run start
     hostname: frontend
     volumes:
-      #- frontendsrc:/srv/tickist/frontend/src
       - ./frontend/src:/srv/tickist/frontend/src
       - ./frontend/e2e:/srv/tickist/frontend/e2e
       - ./frontend/coverage:/srv/tickist/frontend/coverage
@@ -95,10 +94,3 @@ services:
     depends_on:
       - api
 
-#volumes:
-#  frontendsrc:
-#      driver: local
-#      driver_opts:
-#        type: cifs
-#        device: '${PWD}/frontend/src'
-#        o: 'rw,relatime,vers=2.0,sec=ntlmsspi,cache=strict,username=brian,password=***,domain=***,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.75.1,file_mode=0755,dir_mode=0777,iocharset=utf8,nounix,mapposix,nobrl,mfsymlinks,noperm,rsize=1048576,wsize=1048576,echo_interval=60,actimeo=1'
